@@ -4,3 +4,14 @@
 body {
   font-family: 'Orbitron', sans-serif;
 }
+
+/* ✅ Force all chart containers to allow tooltip overflow */
+.space-y-6 {
+  overflow: visible !important;
+}
+
+/* ✅ Ensure ECharts tooltips are always visible */
+div[class*="echarts-tooltip"] {
+  z-index: 999999 !important;
+  pointer-events: none !important;
+}

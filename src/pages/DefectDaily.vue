@@ -1,8 +1,9 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6 p-6" style="overflow: visible !important;">
     <DefectPieChart :data="chartData" />
     <ParetoChart :data="chartData" />
-    <DefectYieldChart />  <!-- 🔹 new 30-day chart -->
+    <LeakHourlyChart style="overflow: visible !important;" />
+    <DefectYieldChart />
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import axios from "axios";
 import DefectPieChart from "../components/DefectPieChart.vue";
 import ParetoChart from "../components/ParetoChart.vue";
 import DefectYieldChart from "../components/DefectYieldChart.vue";
+import LeakHourlyChart from "@/components/LeakHourlyChart.vue";
 
 const chartData = ref([]);
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";

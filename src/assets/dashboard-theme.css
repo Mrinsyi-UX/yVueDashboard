@@ -63,3 +63,8 @@ body {
   0%   { background-position: 0% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* ✅ Force all chart containers to allow tooltip overflow */
+.space-y-6 {
+  overflow: visible !important;
+}
