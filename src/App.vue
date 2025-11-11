@@ -9,12 +9,21 @@
       >
         🏠 Dashboard
       </RouterLink>
+
       <RouterLink
         to="/defects"
         class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300"
         :class="isActive('/defects')"
       >
         ⚙️ Defect Analysis
+      </RouterLink>
+
+      <RouterLink
+        to="/defect_list"
+        class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300"
+        :class="isActive('/defect_list')"
+      >
+        📋 Quality Checksheet
       </RouterLink>
     </nav>
 

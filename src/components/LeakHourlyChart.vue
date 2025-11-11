@@ -43,7 +43,9 @@ const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const stationId = ref(10);
 
 // Default = today (YYYY-MM-DD)
-const targetDate = ref(new Date().toISOString().split("T")[0]);
+//const targetDate = ref(new Date().toISOString().split("T")[0]);
+const targetDate = ref("2025-10-29"); // Hardcoded for demo (29/10/2025)
+
 let refreshTimer = null;
 
 const fetchData = async () => {
