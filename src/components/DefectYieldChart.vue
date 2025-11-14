@@ -12,7 +12,7 @@ import * as echarts from 'echarts'
 
 const chartRef = ref(null)
 let chart
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API = import.meta.env.VITE_API_URL || 'http://10.0.120.216:8000'
 
 const fetchData = async () => {
   const res = await axios.get(`${API}/api/defect_yield`)

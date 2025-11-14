@@ -25,6 +25,14 @@
       >
         📋 Quality Checksheet
       </RouterLink>
+
+      <RouterLink
+        to="/workcell"
+        class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300"
+        :class="isActive('/workcell')"
+      >
+        📋 Workcell Dashboard
+      </RouterLink>
     </nav>
 
     <!-- 🔹 Page Content -->

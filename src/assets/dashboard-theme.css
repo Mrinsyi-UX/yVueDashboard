@@ -9,11 +9,15 @@ body {
 /* Neon text glows */
 .text-glow-blue {
   color: #00baff;
-  text-shadow: 0 0 8px #00baff, 0 0 16px #0093ff;
+  text-shadow:
+    0 0 8px #00baff,
+    0 0 16px #0093ff;
 }
 .text-glow-purple {
   color: #b100ff;
-  text-shadow: 0 0 10px #b100ff, 0 0 20px #8500ff;
+  text-shadow:
+    0 0 10px #b100ff,
+    0 0 20px #8500ff;
 }
 
 /* Glowing border panels */
@@ -46,8 +50,14 @@ body {
   animation: glow-pulse 2s infinite alternate;
 }
 @keyframes glow-pulse {
-  from { opacity: 0.3; box-shadow: 0 0 4px #00baff; }
-  to   { opacity: 1; box-shadow: 0 0 12px #00baff; }
+  from {
+    opacity: 0.3;
+    box-shadow: 0 0 4px #00baff;
+  }
+  to {
+    opacity: 1;
+    box-shadow: 0 0 12px #00baff;
+  }
 }
 
 /* Footer pulse bar */
@@ -60,11 +70,29 @@ body {
   margin-top: 16px;
 }
 @keyframes move-bar {
-  0%   { background-position: 0% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* ✅ Force all chart containers to allow tooltip overflow */
 .space-y-6 {
   overflow: visible !important;
+}
+
+.workcell-card {
+  transition: 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.workcell-card:hover {
+  border-color: #00eaff; /* neon cyan */
+  box-shadow:
+    0 0 10px #00eaff,
+    0 0 20px #00eaff,
+    0 0 30px #00eaff;
+  transform: translateY(-3px); /* lift slightly */
 }

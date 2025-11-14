@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-grid p-6" style="overflow: visible !important;">
+  <div class="dashboard-grid p-6" style="overflow: visible !important">
     <!-- 🔹 Row 1 -->
     <div class="chart-card">
       <h2 class="chart-title">Yield (Daily - Always show 30 days)</h2>
@@ -14,7 +14,7 @@
     <!-- 🔹 Row 2 -->
     <div class="chart-card">
       <h2 class="chart-title">Yield (Hourly)</h2>
-      <LeakHourlyChart style="overflow: visible !important;" />
+      <LeakHourlyChart style="overflow: visible !important" />
     </div>
 
     <div class="chart-card">
@@ -25,34 +25,34 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
-import DefectPieChart from "../components/DefectPieChart.vue";
-import ParetoChart from "../components/ParetoChart.vue";
-import DefectYieldChart from "../components/DefectYieldChart.vue";
-import LeakHourlyChart from "@/components/LeakHourlyChart.vue";
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import DefectPieChart from '../components/DefectPieChart.vue'
+import ParetoChart from '../components/ParetoChart.vue'
+import DefectYieldChart from '../components/DefectYieldChart.vue'
+import LeakHourlyChart from '@/components/LeakHourlyChart.vue'
 
-const chartData = ref([]);
-const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const chartData = ref([])
+const API = import.meta.env.VITE_API_URL || 'http://10.0.120.216:8000'
 
 const fetchData = async () => {
   const res = await axios.get(`${API}/api/leak_defects`, {
-    params: { start: "2025-10-01", end: "2025-10-31" },
-  });
-  const grouped = {};
+    params: { start: '2025-10-01', end: '2025-10-31' },
+  })
+  const grouped = {}
   for (const row of res.data) {
     if (row.total_occurrences > 0) {
       grouped[row.defect_or_position] =
-        (grouped[row.defect_or_position] || 0) + row.total_occurrences;
+        (grouped[row.defect_or_position] || 0) + row.total_occurrences
     }
   }
   chartData.value = Object.entries(grouped).map(([name, value]) => ({
     name,
     value,
-  }));
-};
+  }))
+}
 
-onMounted(fetchData);
+onMounted(fetchData)
 </script>
 
 <style scoped>
