@@ -33,7 +33,7 @@ import DefectYieldChart from '../components/DefectYieldChart.vue'
 import LeakHourlyChart from '@/components/LeakHourlyChart.vue'
 
 const chartData = ref([])
-const API = import.meta.env.VITE_API_URL || 'http://10.0.120.216:8000'
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const fetchData = async () => {
   const res = await axios.get(`${API}/api/leak_defects`, {

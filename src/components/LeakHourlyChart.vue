@@ -53,7 +53,7 @@ import * as echarts from 'echarts'
 
 const chartRef = ref(null)
 const chartInstance = ref(null)
-const API = import.meta.env.VITE_API_URL || 'http://10.0.120.216:8000'
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const stationId = ref(10)
 const targetDate = ref('2025-10-29')

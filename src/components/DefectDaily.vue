@@ -11,7 +11,7 @@ import axios from 'axios'
 import * as echarts from 'echarts'
 
 const chartRef = ref(null)
-const API = import.meta.env.VITE_API_URL || 'http://10.0.120.216:8000'
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 // 💾 Fetch defect data from Flask API
 const fetchDefectData = async () => {
