@@ -33,6 +33,14 @@
       >
         📋 Workcell Dashboard
       </RouterLink>
+
+      <RouterLink
+        to="/workcellstation"
+        class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300"
+        :class="isActive('/workcellstation')"
+      >
+        📋 Workcell Station
+      </RouterLink>
     </nav>
 
     <!-- 🔹 Page Content -->
