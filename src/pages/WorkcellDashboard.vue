@@ -3,74 +3,103 @@
     <h1 class="text-3xl font-bold mb-6 text-white">Workcell High Level Machine Status</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <WorkcellCard v-for="cell in workcells" :key="cell.id" :cell="cell" />
+      <WorkcellCard 
+        v-for="cell in workcells" 
+        :key="cell.id" 
+        :cell="cell" 
+      />
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 import WorkcellCard from '../components/WorkcellCard.vue'
 
-const workcells = [
-  {
-    id: 1,
-    name: 'WC 1',
-    status: 'Running',
-    output: 10,
-    time: '+00:00 (hh:mm)',
-    cycleTime: '',
-    runTime: 0,
-  },
-  {
-    id: 2,
-    name: 'WC 2',
-    status: 'No Material',
-    output: 10,
-    time: '+00:00 (hh:mm)',
-  },
-  {
-    id: 3,
-    name: 'WC 3',
-    status: 'No Man Power',
-    output: 10,
-    time: '+00:00 (hh:mm)',
-  },
-  {
-    id: 4,
-    name: 'WC 4',
-    status: 'Machine Error',
-    output: 10,
-    time: '+00:00 (hh:mm)',
-  },
-  {
-    id: 5,
-    name: 'WC 5',
-    status: 'Running',
-  },
-  {
-    id: 6,
-    name: 'WC 6',
-    status: 'Running',
-  },
-  {
-    id: 7,
-    name: 'WC 7',
-    status: 'Quality Issue',
-  },
-  {
-    id: 8,
-    name: 'Sand Blast',
-    status: 'Running',
-  },
-  {
-    id: 9,
-    name: 'Painting',
-    status: 'Running',
-  },
-  {
-    id: 10,
-    name: 'ED Line',
-    status: 'Machine Setup',
-  },
-]
+const workcells = ref([])
+
+// 🕒 Working hours
+const START_HOUR = 8   // 8 AM
+const END_HOUR = 17    // 5 PM
+
+// 🕒 Runtime %
+function calculateRuntimePercentage() {
+  const now = new Date()
+
+  const startTime = new Date()
+  startTime.setHours(START_HOUR, 0, 0, 0)
+
+  const endTime = new Date()
+  endTime.setHours(END_HOUR, 0, 0, 0)
+
+  const totalWorkMs = endTime - startTime
+
+  let runtimePct = 0
+
+  if (now < startTime) {
+    runtimePct = 0
+  } else if (now > endTime) {
+    runtimePct = 100
+  } else {
+    runtimePct = ((now - startTime) / totalWorkMs) * 100
+  }
+
+  return runtimePct.toFixed(2)
+}
+
+async function loadWorkcell() {
+  try {
+    const res = await axios.get("http://127.0.0.1:8000/api/workcell")
+
+    const now = new Date()
+    const startTime = new Date()
+    startTime.setHours(START_HOUR, 0, 0, 0)
+
+    const elapsedSeconds = (now - startTime) / 1000
+    const runtimePercent = calculateRuntimePercentage()
+
+    workcells.value = res.data.map(cell => {
+      const ct = Number(cell.AvgCycleTime) || 0
+      const currentOutput = Number(cell.MinCycleOutput) || 0
+
+      // ============================
+      //   Expected Output Formula
+      // ============================
+      let expectedOutput = 0
+      if (ct > 0 && elapsedSeconds > 0) {
+        expectedOutput = (elapsedSeconds / ct) - currentOutput
+      }
+
+      // ============================
+      //   Add + or - sign
+      // ============================
+      let formattedExpected = "0.0"
+
+      if (expectedOutput > 0) {
+        formattedExpected = "+" + expectedOutput.toFixed(1)
+      } else if (expectedOutput < 0) {
+        formattedExpected = expectedOutput.toFixed(1)  // already negative
+      } else {
+        formattedExpected = "0.0"
+      }
+
+      return {
+        ...cell,
+        runtimePercentage: runtimePercent,
+        expectedOutput: formattedExpected
+      }
+    })
+
+    console.log("Workcell data:", workcells.value)
+
+  } catch (error) {
+    console.error("Failed to load workcell:", error)
+  }
+}
+
+onMounted(() => {
+  loadWorkcell()
+  setInterval(loadWorkcell, 5000)
+})
 </script>

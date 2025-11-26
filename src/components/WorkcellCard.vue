@@ -6,15 +6,20 @@
     <h2 class="text-xl font-bold mb-2">{{ cell.name }}</h2>
 
     <p>Status : {{ cell.status }}</p>
-    <p>WIP : Material In - Output</p>
-    <p>Target Output : Cycle Time × Time Lapse</p>
-    <p>Current Output : Counter</p>
-    <p>Cycle Time : {{ cell.cycleTime || '-' }}</p>
-    <p>Run Time : {{ cell.runTime }}%</p>
+    <p>WIP : {{ cell.IssueMaterial - cell.MinCycleOutput }}</p>
+    <p>Target Output : {{ cell.Target }}</p>
+    <p>Current Output : {{ cell.MinCycleOutput }}</p>
+    <p>Cycle Time : {{ cell.AvgCycleTime }} second</p>
+    <p>Runtime: {{ cell.runtimePercentage }}%</p>
 
-    <p class="mt-2 font-bold">Output Status : +{{ cell.output }} pcs ({{ cell.time }})</p>
+
+    <p class="mt-2 font-bold">
+    <p>Output Status:{{ cell.expectedOutput }} pcs</p>
+    <p> Pieces x Cycle Time</p>
+    </p>
   </div>
 </template>
+
 
 <script setup>
 import { computed } from 'vue'
@@ -28,7 +33,7 @@ const cardColor = computed(() => {
   switch (props.cell.status) {
     case 'Running':
       return 'rgba(0,153,51,0.7)'
-    case 'No Material':
+    case 'Issue':
       return 'rgba(244,241,192,0.7)'
     case 'No Man Power':
       return 'rgba(240,228,0,0.7)'
