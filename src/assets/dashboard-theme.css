@@ -113,3 +113,16 @@ body {
   padding: 4px 6px;
   border-radius: 6px;
 }
+
+.neon-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #6cf2ff;
+  text-shadow: 0 0 8px #33d4ff;
+}
+
+.zone-title {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #71d9ff;
+}

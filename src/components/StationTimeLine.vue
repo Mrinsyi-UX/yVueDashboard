@@ -1,22 +1,13 @@
 <template>
-  <div class="mb-4">
-    <div class="text-sm font-semibold mb-1">{{ station.st }}</div>
-
-    <div class="relative w-full h-3 bg-gray-300 rounded overflow-hidden">
-
-      <!-- 🟩 Running Time -->
-      <div
-        v-if="runningWidth > 0"
-        class="absolute top-0 h-3 bg-green-500"
-        :style="{ left: runningLeft, width: runningWidth }"
-      ></div>
-
-      <!-- 🟥 Anomaly Segments -->
-      <div
-        v-for="(a, i) in anomalyBars"
+  <div>
+    <div class="flex h-4 w-full border border-cyan-300/40 rounded-md overflow-hidden bg-gray-300/20">
+      
+      <!-- Render timeline segments in correct sequence -->
+      <div 
+        v-for="(seg, i) in timeline" 
         :key="i"
-        class="absolute top-0 h-3 bg-red-500"
-        :style="{ left: a.left, width: a.width }"
+        :class="segmentClass(seg.type)"
+        :style="{ width: seg.width + '%' }"
       ></div>
 
     </div>
@@ -24,62 +15,81 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs";
+import { computed } from "vue";
 
 const props = defineProps({
   station: Object
 });
 
-// ---- Working Hours ----
-const WORK_START = dayjs().hour(8).minute(0).second(0);
-const WORK_END = dayjs().hour(17).minute(45).second(0);
-const TOTAL_MIN = WORK_END.diff(WORK_START, "minute");
+// Helper — minutes difference
+function minutesBetween(a, b) {
+  return (new Date(b) - new Date(a)) / 60000;
+}
 
-// ---- Convert time → % string ----
-const toPercent = (min) => `${(min / TOTAL_MIN) * 100}%`;
+// CSS Class for each segment type
+function segmentClass(type) {
+  return {
+    running: "bg-green-500 shadow-[0_0_8px_#22c55e]",
+    anomaly: "bg-yellow-400 shadow-[0_0_8px_#facc15]",
+    future: "bg-gray-500/30"
+  }[type];
+}
 
-// ---- Running time bar ----
-let runningLeft = "0%";
-let runningWidth = "0%";
+/* Total shift length */
+const totalShiftMinutes = computed(() =>
+  minutesBetween(props.station.shift_start, props.station.shift_end)
+);
 
-if (props.station.running_start) {
-  const runStart = dayjs(props.station.running_start);
-  const runEnd = props.station.running_end
-    ? dayjs(props.station.running_end)
-    : dayjs(); // running until now
+/* FINAL ordered timeline array */
+const timeline = computed(() => {
+  const result = [];
 
-  const leftMin = Math.max(0, runStart.diff(WORK_START, "minute"));
-  const rightMin = Math.min(
-    TOTAL_MIN,
-    runEnd.diff(WORK_START, "minute")
+  let cursor = new Date(props.station.shift_start);
+  const currTime = new Date(props.station.current_time);
+  const shiftEnd = new Date(props.station.shift_end);
+
+  // Sort anomalies by start time (safety)
+  const anomalies = [...props.station.anomalies].sort(
+    (a, b) => new Date(a.start) - new Date(b.start)
   );
 
-  runningLeft = toPercent(leftMin);
-  runningWidth = toPercent(rightMin - leftMin);
-}
+  for (let a of anomalies) {
+    const start = new Date(a.start);
+    const end = new Date(a.end ?? props.station.current_time);
 
-// ---- Anomaly segments ----
-let anomalyBars = [];
+    // Add running segment BEFORE anomaly
+    if (cursor < start) {
+      result.push({
+        type: "running",
+        width: (minutesBetween(cursor, start) / totalShiftMinutes.value) * 100
+      });
+    }
 
-if (props.station.anomalies) {
-  anomalyBars = props.station.anomalies.map(a => {
-    const aStart = dayjs(a.start);
-    const aEnd = dayjs(a.end);
+    // Add anomaly segment
+    result.push({
+      type: "anomaly",
+      width: (minutesBetween(start, end) / totalShiftMinutes.value) * 100
+    });
 
-    const leftMin = Math.max(0, aStart.diff(WORK_START, "minute"));
-    const rightMin = Math.min(
-      TOTAL_MIN,
-      aEnd.diff(WORK_START, "minute")
-    );
+    cursor = end;
+  }
 
-    return {
-      left: toPercent(leftMin),
-      width: toPercent(rightMin - leftMin)
-    };
-  });
-}
+  // After last anomaly: running until current time
+  if (cursor < currTime) {
+    result.push({
+      type: "running",
+      width: (minutesBetween(cursor, currTime) / totalShiftMinutes.value) * 100
+    });
+  }
+
+  // Future segment until shift_end
+  if (currTime < shiftEnd) {
+    result.push({
+      type: "future",
+      width: (minutesBetween(currTime, shiftEnd) / totalShiftMinutes.value) * 100
+    });
+  }
+
+  return result;
+});
 </script>
-
-<style scoped>
-/* You can customize colors here if needed */
-</style>
