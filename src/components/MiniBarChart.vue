@@ -1,54 +1,61 @@
-<template>
-  <div ref="chartRef" style="height: 200px; width: 100%;"></div>
-</template>
-
 <script setup>
 import * as echarts from "echarts";
-import { onMounted, ref, watch, onBeforeUnmount } from "vue";
+import { onMounted, watch, ref } from "vue";
 
 const props = defineProps({
-  chart: Object
+  chart: Object   // expects { hours: [...], series: [...] }
 });
 
-let chartInstance = null;
 const chartRef = ref(null);
+let chartInstance = null;
 
-const draw = () => {
-  if (!props.chart || !props.chart.series) return;
+onMounted(() => {
+  chartInstance = echarts.init(chartRef.value);
+  updateChart();
+});
 
-  if (!chartInstance) {
-    chartInstance = echarts.init(chartRef.value);
-  }
+watch(
+  () => props.chart,
+  () => updateChart(),
+  { deep: true }
+);
 
-  chartInstance.setOption({
-    backgroundColor: "transparent",
-    tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
-    legend: { top: 0, textStyle: { color: "#aee6ff" } },
-    grid: { left: 40, right: 20, top: 40, bottom: 30 },
+function updateChart() {
+  if (!props.chart || !chartInstance) return;
+
+  const option = {
+    tooltip: { trigger: "axis" },
+    legend: {
+              type: "scroll",
+              bottom: 0,
+              textStyle: { color: "#fff" }
+            },
+
+    grid: {
+              left: "5%",
+              right: "5%",
+              top: "20%",
+              bottom: "22%"   // more space for long legend
+          },
+
     xAxis: {
       type: "category",
       data: props.chart.hours,
-      axisLabel: { color: "#aee6ff" }
+      axisLabel: { color: "#fff" }
     },
-    yAxis: { type: "value", axisLabel: { color: "#aee6ff" } },
+
+    yAxis: {
+      type: "value",
+      axisLabel: { color: "#fff" }
+    },
+
     series: props.chart.series
-  });
+  };
 
-  chartInstance.resize();
-};
-
-onMounted(() => {
-  draw();
-  window.addEventListener("resize", handleResize);
-});
-
-const handleResize = () => {
-  if (chartInstance) chartInstance.resize();
-};
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
-});
-
-watch(() => props.chart, draw, { deep: true });
+  chartInstance.setOption(option);
+}
 </script>
+
+<template>
+  <div ref="chartRef" style="width: 100%; height: 280px;"></div>
+</template>

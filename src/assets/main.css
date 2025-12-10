@@ -15,3 +15,20 @@ div[class*="echarts-tooltip"] {
   z-index: 999999 !important;
   pointer-events: none !important;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #0ea5e9;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+}
+
+.chart-scroll-wrapper {
+  max-height: 350px;     /* adjust height */
+  overflow-y: auto;       /* scroll up/down */
+  padding-top: 20px;      /* space above */
+}
