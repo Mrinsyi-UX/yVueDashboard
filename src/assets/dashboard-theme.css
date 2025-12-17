@@ -126,3 +126,14 @@ body {
   font-weight: 600;
   color: #71d9ff;
 }
+
+.kanban-card {
+  background: #031739;
+  border: 1px solid #00baff44;
+  box-shadow: 0 0 12px #00baff22;
+  transition: 0.3s ease;
+}
+
+.kanban-card:hover {
+  box-shadow: 0 0 18px #00baff55;
+}

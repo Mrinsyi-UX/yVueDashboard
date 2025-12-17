@@ -5,6 +5,7 @@ import Defect_List from '../pages/Defect_List.vue'
 import WorkCellDashboard from '../pages/WorkcellDashboard.vue'
 import WorkcellStation from '@/pages/WorkcellStation.vue'
 import WorkcellZoneStation from '@/pages/WorkcellZoneStationDetail.vue'
+import OEEOverall from '@/pages/OEEOverall.vue'
 
 const routes = [
   { path: '/', name: 'home', component: DashboardHome },
@@ -12,7 +13,8 @@ const routes = [
   { path: '/defect_list', name: 'defect_list', component: Defect_List },
   { path: '/workcell', name: 'workcell', component: WorkCellDashboard },
   { path: '/workcellstation', name:'workcellstation', component: WorkcellStation},
-  { path: '/workcellzonestation', name:'workcellzonestation', component: WorkcellZoneStation}
+  { path: '/workcellzonestation', name:'workcellzonestation', component: WorkcellZoneStation},
+  { path: '/OEEOverall', name:'OEEOverall', component: OEEOverall}
 ]
 
 const router = createRouter({

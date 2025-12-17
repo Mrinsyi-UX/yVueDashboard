@@ -80,6 +80,37 @@
           
         </div>
       </div>
+      
+            <!-- 📦 OEE (Dropdown) -->
+      <div
+        class="relative OEE-dropdown-parent"
+        @click.stop="OEEtoggleDropdown"
+      >
+        <button
+          class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300 flex items-center gap-2"
+          :class="isActiveGroup(['/OEEOverview'])"
+        >
+          📦 OEE
+          <span :class="openOEE ? 'rotate-180' : ''" class="transition-transform">▼</span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          v-if="openOEE"
+          class="absolute left-0 mt-2 w-52 bg-[#031739] border border-[#00baff44] rounded-lg shadow-xl z-50"
+        >
+          <RouterLink
+            to="/OEEOverall"
+            class="block px-4 py-2 hover:bg-[#021027] rounded-lg transition-all duration-300"
+            :class="isActive('/OEEOverall')"
+            @click="OEEcloseDropdown"
+          >
+            📋 OEEOverview
+          </RouterLink>
+
+          
+        </div>
+      </div>
 
     </nav>
 
@@ -93,14 +124,23 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const open = ref(false)
+const open = ref(false)                     // for Workcell dropdown
+const openOEE = ref(false)                  // for OEE dropdown 
 
 const toggleDropdown = () => {
   open.value = !open.value
 }
 
+const OEEtoggleDropdown = () => {
+  openOEE.value = !openOEE.value
+}
+
 const closeDropdown = () => {
   open.value = false
+}
+
+const OEEcloseDropdown = () => {
+  openOEE.value = false
 }
 
 // === Close dropdown when clicking outside ===
@@ -110,12 +150,21 @@ const handleClickOutside = (event) => {
   }
 }
 
+// === Close dropdown when clicking outside OEE ===
+const handleClickOutsideOEE = (event) => {
+  if (!event.target.closest('.OEE-dropdown-parent')) {
+    openOEE.value = false
+  }
+}
+
 onMounted(() => {
   window.addEventListener('click', handleClickOutside)
+  window.addEventListener('click', handleClickOutsideOEE)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('click', handleClickOutsideOEE)
 })
 
 // === Active link styling ===
