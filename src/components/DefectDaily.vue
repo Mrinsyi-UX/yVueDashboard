@@ -7,15 +7,16 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+//import axios from 'axios' --- IGNORE ---  Already centralized in service/api.js
 import * as echarts from 'echarts'
+import api from '../services/api.js'
 
 const chartRef = ref(null)
-const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+//const API = import.meta.env.VITE_API_URL  --- IGNORE ---
 
 // 💾 Fetch defect data from Flask API
 const fetchDefectData = async () => {
-  const res = await axios.get(`${API}/api/leak_defects`, {
+  const res = await api.get(`/api/leak_defects`, {
     params: {
       start: '2025-10-01',
       end: '2025-10-31',

@@ -1,8 +1,6 @@
 <template>
   <OEEOverallCard>
-    <h2 class="text-xl font-semibold text-[#00eaff] mb-2">
-      OEE — Last 12 Month
-    </h2>
+    <h2 class="text-xl font-semibold text-[#00eaff] mb-2">OEE — Last 12 Month</h2>
 
     <!-- Bar chart -->
     <div ref="chartRef" class="h-56 w-full"></div>
@@ -10,115 +8,142 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue"
-import * as echarts from "echarts"
-import OEEOverallCard from "./OEEOverallCard.vue"
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import * as echarts from 'echarts'
+import OEEOverallCard from './OEEOverallCard.vue'
+import api from '../services/api.js'
 
 const chartRef = ref(null)
 let chart = null
 
-// 🔹 DEMO DATA (replace later from API)
-const month = [
-  "01","02","03","04","05","06",
-  "07","08","09","10","11","12"
-]
+// Declare reactive variables
+const months = ref([])
+const oeeData = ref([])
+const availabilityData = ref([])
+const performanceData = ref([])
+const qualityData = ref([])
 
+// Fetch OEE data for the last 12 months
+// Function to fetch OEE data
+const fetchOEE = async () => {
+  const res = await api.get('/api/oee/OEE_BC_12month')
 
-const oeeData = [
-  68, 70, 69, 71, 72, 70,
-  69, 71, 73, 72, 70, 69
-]
+  const data = res.data
 
-const availabilityData = new Array(month.length).fill(55)
-const performanceData  = new Array(month.length).fill(93)
-const qualityData      = new Array(month.length).fill(79)
+  // Fetch the dates and format them to "MMM" (e.g., "Jan", "Feb")
+  months.value = data.map((d) =>
+    d.production_date
+      ? new Date(d.production_date).toLocaleDateString('en-GB', {
+          month: 'short',
+          year: '2-digit',
+        })
+      : '',
+  )
 
-onMounted(() => {
+  // Map the data to respective arrays
+  availabilityData.value = data.map((d) => d.availability)
+  performanceData.value = data.map((d) => d.performance)
+  qualityData.value = data.map((d) => d.quality)
+  oeeData.value = data.map((d) => d.oee)
+}
+
+onMounted(async () => {
   chart = echarts.init(chartRef.value)
 
+  await fetchOEE()
+
   chart.setOption({
-  backgroundColor: "transparent",
+    backgroundColor: 'transparent',
 
-  legend: {
-    top: 0,
-    textStyle: {
-      color: "#cbd5e1",
-      fontSize: 11,
-    },
-  },
-
-  grid: {
-    left: 40,
-    right: 20,
-    top: 40,   // ⬅ make room for legend
-    bottom: 40,
-  },
-
-  xAxis: {
-    type: "category",
-    data: month,
-    axisLine: { lineStyle: { color: "#445" } },
-    axisTick: { show: false },
-    axisLabel: { color: "#aaa", fontSize: 10 },
-  },
-
-  yAxis: {
-    type: "value",
-    min: 0,
-    max: 100,
-    splitLine: {
-      lineStyle: { color: "#1f3555", type: "dashed" },
-    },
-    axisLabel: { color: "#aaa" },
-  },
-
-  tooltip: {
-    trigger: "axis",
-    axisPointer: { type: "shadow" },
-    backgroundColor: "#031739",
-    borderColor: "#00baff",
-    textStyle: { color: "#fff" },
-  },
-
-  series: [
-    {
-      name: "Availability",
-      type: "bar",
-      stack: "total",
-      data: availabilityData,
-      itemStyle: { color: "#7cffc4" },
-      barWidth: "60%",
-    },
-    {
-      name: "Performance",
-      type: "bar",
-      stack: "total",
-      data: performanceData,
-      itemStyle: { color: "#ffd166" },
-    },
-    {
-      name: "Quality",
-      type: "bar",
-      stack: "total",
-      data: qualityData,
-      itemStyle: { color: "#89CFF0" },
-    },
-    {
-      name: "OEE",
-      type: "line",
-      data: oeeData,
-      symbol: "circle",
-      symbolSize: 6,
-      lineStyle: {
-        color: "#00eaff",
-        width: 2,
+    legend: {
+      top: 0,
+      textStyle: {
+        color: '#cbd5e1',
+        fontSize: 11,
       },
     },
-  ],
-})
 
+    grid: {
+      left: 40,
+      right: 20,
+      top: 40, // ⬅ make room for legend
+      bottom: 40,
+    },
 
+    xAxis: {
+      type: 'category',
+      data: months.value,
+      axisLine: { lineStyle: { color: '#445' } },
+      axisTick: { show: false },
+      axisLabel: { color: '#aaa', fontSize: 10 },
+    },
 
+    yAxis: {
+      type: 'value',
+      min: 0,
+      max: 300,
+      splitLine: {
+        lineStyle: { color: '#1f3555', type: 'dashed' },
+      },
+      axisLabel: { color: '#aaa' },
+    },
+
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      backgroundColor: '#031739',
+      borderColor: '#00baff',
+      textStyle: { color: '#fff' },
+      formatter: (params) => {
+        if (!params || params.length === 0) return ''
+
+        const hasData = params.some((p) => p.value != null)
+        if (!hasData) return 'No Production'
+
+        return params
+          .filter((p) => p.value != null)
+          .map((p) => `${p.marker} ${p.seriesName}: ${p.value}%`)
+          .join('<br/>')
+      },
+    },
+
+    series: [
+      {
+        name: 'Availability',
+        type: 'bar',
+        stack: 'total',
+        data: availabilityData.value,
+        itemStyle: { color: '#7cffc4' },
+        barWidth: '60%',
+      },
+      {
+        name: 'Performance',
+        type: 'bar',
+        stack: 'total',
+        data: performanceData.value,
+        itemStyle: { color: '#ffd166' },
+      },
+      {
+        name: 'Quality',
+        type: 'bar',
+        stack: 'total',
+        data: qualityData.value,
+        itemStyle: { color: '#89CFF0' },
+      },
+      {
+        name: 'OEE',
+        type: 'line',
+        data: oeeData.value,
+        connectNulls: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#00eaff',
+          width: 2,
+        },
+      },
+    ],
+  })
 })
 
 onBeforeUnmount(() => {
