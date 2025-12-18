@@ -48,15 +48,16 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import axios from 'axios'
+//import axios from 'axios'
 import * as echarts from 'echarts'
+import api from '@/services/api'
 
 const chartRef = ref(null)
 const chartInstance = ref(null)
-const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+//const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const stationId = ref(10)
-const targetDate =  ref(new Date().toISOString().slice(0, 10))                  //ref('2025-10-29')
+const targetDate = ref(new Date().toISOString().slice(0, 10)) //ref('2025-10-29')
 const isDemo = ref(false) // ✅ Default to real mode
 
 let refreshTimer = null
@@ -65,7 +66,7 @@ const fetchData = async () => {
   try {
     // ✅ Switch endpoint based on toggle
     const endpoint = isDemo.value ? '/api/leak_hourly_demo' : '/api/leak_hourly'
-    const res = await axios.get(`${API}${endpoint}`, {
+    const res = await api.get(`${endpoint}`, {
       params: {
         station_id: stationId.value,
         date: targetDate.value,

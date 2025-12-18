@@ -32,10 +32,9 @@ const fetchOEE = async () => {
 
   // Fetch the dates and format them to "MMM" (e.g., "Jan", "Feb")
   months.value = data.map((d) =>
-    d.production_date
-      ? new Date(d.production_date).toLocaleDateString('en-GB', {
+    d.production_month
+      ? new Date(d.production_month).toLocaleDateString('en-GB', {
           month: 'short',
-          year: '2-digit',
         })
       : '',
   )
@@ -51,6 +50,12 @@ onMounted(async () => {
   chart = echarts.init(chartRef.value)
 
   await fetchOEE()
+
+  console.log('months:', months.value)
+  console.log('availability:', availabilityData.value.length)
+  console.log('performance:', performanceData.value.length)
+  console.log('quality:', qualityData.value.length)
+  console.log('oee:', oeeData.value.length)
 
   chart.setOption({
     backgroundColor: 'transparent',
@@ -73,9 +78,9 @@ onMounted(async () => {
     xAxis: {
       type: 'category',
       data: months.value,
-      axisLine: { lineStyle: { color: '#445' } },
-      axisTick: { show: false },
-      axisLabel: { color: '#aaa', fontSize: 10 },
+      axisLine: { lineStyle: { color: '#94A3B8' } },
+      axisTick: { show: true },
+      axisLabel: { color: '#E5E7EB', fontSize: 12 },
     },
 
     yAxis: {

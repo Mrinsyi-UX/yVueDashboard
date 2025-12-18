@@ -12,14 +12,11 @@
     <p>Cycle Time : {{ cell.AvgCycleTime }} second</p>
     <p>Runtime: {{ cell.runtimePercentage }}%</p>
 
-
-    <p class="mt-2 font-bold">
+    <p class="mt-2 font-bold"></p>
     <p>Output Status:{{ cell.expectedOutput }} pcs</p>
-    <p> Pieces x Cycle Time</p>
-    </p>
+    <p>Pieces x Cycle Time</p>
   </div>
 </template>
-
 
 <script setup>
 import { computed } from 'vue'

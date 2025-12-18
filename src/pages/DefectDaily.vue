@@ -9,14 +9,14 @@
     <div class="chart-card">
       <h2 class="chart-title">Defect % (Daily)</h2>
 
-        <!-- 🔹 Date Range Selector -->
-        <div class="date-controls">
-          <label>Start:</label>
-          <input type="date" v-model="startDate" @change="fetchData" />
+      <!-- 🔹 Date Range Selector -->
+      <div class="date-controls">
+        <label>Start:</label>
+        <input type="date" v-model="startDate" @change="fetchData" />
 
-          <label>End:</label>
-          <input type="date" v-model="endDate" @change="fetchData" />
-        </div>
+        <label>End:</label>
+        <input type="date" v-model="endDate" @change="fetchData" />
+      </div>
 
       <DefectPieChart :data="chartData" />
     </div>
@@ -36,23 +36,24 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+//import axios from 'axios'
 import DefectPieChart from '../components/DefectPieChart.vue'
 import ParetoChart from '../components/ParetoChart.vue'
 import DefectYieldChart from '../components/DefectYieldChart.vue'
 import LeakHourlyChart from '@/components/LeakHourlyChart.vue'
+import api from '@/services/api'
 
 const chartData = ref([])
-const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+//const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const startDate = ref(new Date().toISOString().slice(0, 10))
 const endDate = ref(new Date().toISOString().slice(0, 10))
 
 const fetchData = async () => {
-  const res = await axios.get(`${API}/api/leak_defects`, {
-    params: { 
-      start: startDate.value, 
-      end: endDate.value 
+  const res = await api.get(`/api/leak_defects`, {
+    params: {
+      start: startDate.value,
+      end: endDate.value,
     },
   })
 
@@ -71,7 +72,6 @@ const fetchData = async () => {
 }
 
 onMounted(fetchData)
-
 </script>
 
 <style scoped>

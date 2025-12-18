@@ -58,16 +58,17 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
+//import axios from 'axios'
+import api from '@/services/api'
 
-const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+//const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const selectedMonth = ref(new Date().toISOString().slice(0, 7))
 const rawData = ref([])
 
 // 🧭 Fetch data from Flask
 const fetchData = async () => {
-  const res = await axios.get(`${API}/api/qc_cs`, {
+  const res = await api.get(`api/qc_cs`, {
     params: { month: selectedMonth.value },
   })
   rawData.value = res.data

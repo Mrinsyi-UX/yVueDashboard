@@ -2,7 +2,6 @@
   <div class="min-h-screen bg-[#010a1a] text-white">
     <!-- 🔹 Top Navigation -->
     <nav class="flex justify-center gap-6 py-4 border-b border-[#00baff44] relative">
-
       <!-- 🏠 Dashboard -->
       <RouterLink
         to="/"
@@ -10,6 +9,15 @@
         :class="isActive('/')"
       >
         🏠 Dashboard
+      </RouterLink>
+
+      <!-- 🏠 Customer Dashboard -->
+      <RouterLink
+        to="/customerdashboard"
+        class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300"
+        :class="isActive('/customerdashboard')"
+      >
+        🏠 Customer Dashboard
       </RouterLink>
 
       <!-- ⚙️ Defect Analysis -->
@@ -31,10 +39,7 @@
       </RouterLink>
 
       <!-- 📦 Workcell (Dropdown) -->
-      <div
-        class="relative workcell-dropdown-parent"
-        @click.stop="toggleDropdown"
-      >
+      <div class="relative workcell-dropdown-parent" @click.stop="toggleDropdown">
         <button
           class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300 flex items-center gap-2"
           :class="isActiveGroup(['/workcell', '/workcellstation'])"
@@ -74,18 +79,11 @@
           >
             📋 Workcell Zone Station
           </RouterLink>
-
-
-
-          
         </div>
       </div>
-      
-            <!-- 📦 OEE (Dropdown) -->
-      <div
-        class="relative OEE-dropdown-parent"
-        @click.stop="OEEtoggleDropdown"
-      >
+
+      <!-- 📦 OEE (Dropdown) -->
+      <div class="relative OEE-dropdown-parent" @click.stop="OEEtoggleDropdown">
         <button
           class="px-4 py-2 rounded-lg text-lg font-semibold transition-all duration-300 flex items-center gap-2"
           :class="isActiveGroup(['/OEEOverview'])"
@@ -107,11 +105,8 @@
           >
             📋 OEEOverview
           </RouterLink>
-
-          
         </div>
       </div>
-
     </nav>
 
     <!-- Page Content -->
@@ -124,8 +119,8 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const open = ref(false)                     // for Workcell dropdown
-const openOEE = ref(false)                  // for OEE dropdown 
+const open = ref(false) // for Workcell dropdown
+const openOEE = ref(false) // for OEE dropdown
 
 const toggleDropdown = () => {
   open.value = !open.value

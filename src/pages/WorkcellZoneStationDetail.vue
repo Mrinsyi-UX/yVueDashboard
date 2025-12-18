@@ -7,8 +7,8 @@
     <!-- ⭐ DATE PICKER -->
     <div class="mb-6">
       <label class="text-white font-semibold mr-3">Select Date:</label>
-      <input 
-        type="date" 
+      <input
+        type="date"
         v-model="selectedDate"
         @change="refreshAll"
         class="px-4 py-2 rounded bg-gray-800 text-white border border-gray-600"
@@ -24,79 +24,74 @@
         :selected-date="selectedDate"
       />
     </div>
-
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted, watch } from "vue";
-import axios from "axios";
-import WorkcellZoneStationCard from "../components/WorkcellZoneStationCard.vue";
+import { ref, onMounted, watch } from 'vue'
+//import axios from "axios";
+import WorkcellZoneStationCard from '../components/WorkcellZoneStationCard.vue'
+import api from '../services/api.js'
 
 // -----------------------------------------
 // STATE
 // -----------------------------------------
 //const selectedDate = ref("2025-12-09");
-const selectedDate = ref(new Date().toISOString().slice(0, 10));
-const workcells = ref([]);
-const hourlyOutput = ref([]);
+const selectedDate = ref(new Date().toISOString().slice(0, 10))
+const workcells = ref([])
+const hourlyOutput = ref([])
 
 // -----------------------------------------
 // 1) Fetch Main Workcell Summary
 // -----------------------------------------
 async function fetchWorkcells() {
-  const res = await axios.get("http://localhost:8000/api/wzs_card", {
-    params: { date: selectedDate.value }
-  });
-  workcells.value = res.data;
+  const res = await api.get('api/wzs_card', {
+    params: { date: selectedDate.value },
+  })
+  workcells.value = res.data
 }
 
 // -----------------------------------------
 // 2) Fetch Hourly Output per Workcell
 // -----------------------------------------
 async function fetchHourly() {
-  const res = await axios.get(
-    "http://localhost:8000/api/station_output_hourly",
-    { params: { date: selectedDate.value } }
-  );
-  hourlyOutput.value = res.data;
+  const res = await api.get('api/station_output_hourly', { params: { date: selectedDate.value } })
+  hourlyOutput.value = res.data
 }
 
 // -----------------------------------------
 // 3) Merge both queries together
 // -----------------------------------------
 function mergeHourly() {
-  workcells.value = workcells.value.map(wc => {
-    const match = hourlyOutput.value.find(x => x.wc === wc.id);
+  workcells.value = workcells.value.map((wc) => {
+    const match = hourlyOutput.value.find((x) => x.wc === wc.id)
     return {
       ...wc,
-      hourly: match ? match.hours : []   // <-- this is used by your MiniBarChart.vue
-    };
-  });
+      hourly: match ? match.hours : [], // <-- this is used by your MiniBarChart.vue
+    }
+  })
 }
 
 // -----------------------------------------
 // 4) Reload everything
 // -----------------------------------------
 async function refreshAll() {
-  await fetchWorkcells();
-  await fetchHourly();
-  mergeHourly();
+  await fetchWorkcells()
+  await fetchHourly()
+  mergeHourly()
 }
 
 // -----------------------------------------
 // 5) Load on startup
 // -----------------------------------------
 onMounted(() => {
-  refreshAll();
-});
+  refreshAll()
+})
 
 // -----------------------------------------
 // 6) Auto refresh when date changes
 // -----------------------------------------
 watch(selectedDate, () => {
-  refreshAll();
-});
+  refreshAll()
+})
 </script>
-

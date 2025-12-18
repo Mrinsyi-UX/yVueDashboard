@@ -7,15 +7,16 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import axios from 'axios'
+//import axios from 'axios'
 import * as echarts from 'echarts'
+import api from '@/services/api'
 
 const chartRef = ref(null)
 let chart
-const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+//const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
 
 const fetchData = async () => {
-  const res = await axios.get(`${API}/api/defect_yield`)
+  const res = await api.get(`api/defect_yield`)
   const data = res.data
 
   const dates = data.map((d) => d.date)
