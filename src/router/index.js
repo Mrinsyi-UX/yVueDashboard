@@ -6,15 +6,19 @@ import WorkCellDashboard from '../pages/WorkcellDashboard.vue'
 import WorkcellStation from '@/pages/WorkcellStation.vue'
 import WorkcellZoneStation from '@/pages/WorkcellZoneStationDetail.vue'
 import OEEOverall from '@/pages/OEEOverall.vue'
+import CustomerDashboard from '@/pages/CustomerDashboard.vue'
+import TestDebug from '@/pages/TestDebug.vue'
 
 const routes = [
   { path: '/', name: 'home', component: DashboardHome },
   { path: '/defects', name: 'defects', component: DefectDaily },
   { path: '/defect_list', name: 'defect_list', component: Defect_List },
   { path: '/workcell', name: 'workcell', component: WorkCellDashboard },
-  { path: '/workcellstation', name:'workcellstation', component: WorkcellStation},
-  { path: '/workcellzonestation', name:'workcellzonestation', component: WorkcellZoneStation},
-  { path: '/OEEOverall', name:'OEEOverall', component: OEEOverall}
+  { path: '/workcellstation', name: 'workcellstation', component: WorkcellStation },
+  { path: '/workcellzonestation', name: 'workcellzonestation', component: WorkcellZoneStation },
+  { path: '/OEEOverall', name: 'OEEOverall', component: OEEOverall },
+  { path: '/CustomerDashboard', name: 'CustomerDashboard', component: CustomerDashboard },
+  { path: '/test-debug', name: 'TestDebug', component: TestDebug },
 ]
 
 const router = createRouter({
