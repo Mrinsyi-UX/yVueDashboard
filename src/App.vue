@@ -53,6 +53,7 @@
           v-if="open"
           class="absolute left-0 mt-2 w-52 bg-[#031739] border border-[#00baff44] rounded-lg shadow-xl z-50"
         >
+          <!-- 📦 Workcell Detail Type 1 -->
           <RouterLink
             to="/workcell"
             class="block px-4 py-2 hover:bg-[#021027] rounded-lg transition-all duration-300"
@@ -62,6 +63,7 @@
             📋 Workcell Dashboard
           </RouterLink>
 
+          <!-- 📦 Workcell Detail Type 2 -->
           <RouterLink
             to="/workcellstation"
             class="block px-4 py-2 hover:bg-[#021027] rounded-lg transition-all duration-300"
@@ -71,6 +73,7 @@
             📋 Workcell Station
           </RouterLink>
 
+          <!-- 📦 Workcell Detail Type 3 -->
           <RouterLink
             to="/workcellzonestation"
             class="block px-4 py-2 hover:bg-[#021027] rounded-lg transition-all duration-300"
@@ -78,6 +81,16 @@
             @click="closeDropdown"
           >
             📋 Workcell Zone Station
+          </RouterLink>
+
+          <!-- 📦 Workcell Detail Type 4 -->
+          <RouterLink
+            to="/workcell-detail-type4"
+            class="block px-4 py-2 hover:bg-[#021027] rounded-lg transition-all duration-300"
+            :class="isActive('/workcell-detail-type4')"
+            @click="closeDropdown"
+          >
+            📋 Workcell Detail Type 4
           </RouterLink>
         </div>
       </div>

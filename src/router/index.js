@@ -8,6 +8,7 @@ import WorkcellZoneStation from '@/pages/WorkcellZoneStationDetail.vue'
 import OEEOverall from '@/pages/OEEOverall.vue'
 import CustomerDashboard from '@/pages/CustomerDashboard.vue'
 import TestDebug from '@/pages/TestDebug.vue'
+import WorkcellDetailType4 from '../pages/WorkcellDetailType4.vue'
 
 const routes = [
   { path: '/', name: 'home', component: DashboardHome },
@@ -19,6 +20,7 @@ const routes = [
   { path: '/OEEOverall', name: 'OEEOverall', component: OEEOverall },
   { path: '/CustomerDashboard', name: 'CustomerDashboard', component: CustomerDashboard },
   { path: '/test-debug', name: 'TestDebug', component: TestDebug },
+  { path: '/workcell-detail-type4', name: 'WorkcellDetailType4', component: WorkcellDetailType4 },
 ]
 
 const router = createRouter({
