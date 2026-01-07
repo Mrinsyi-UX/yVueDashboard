@@ -43,7 +43,13 @@
       <NeonCard>
         <OutputBarChartHourly v-if="hourlyOutputChart" :chart="hourlyOutputChart" />
       </NeonCard>
-      <NeonCard><TestChild /></NeonCard>
+      <NeonCard
+        ><CTBarChartHourly
+          v-if="hourlyCTChart"
+          :hours="hourlyCTChart.hours"
+          :series="hourlyCTChart.series"
+        />
+      </NeonCard>
     </div>
   </div>
 </template>
@@ -54,10 +60,11 @@ import { ref, onMounted, watch, computed } from 'vue'
 
 // Components
 import NeonCard from '@/components/NeonCard.vue'
-import TestChild from '@/components/TestChild.vue'
+//import TestChild from '@/components/TestChild.vue'
 import ZoneStationTable from '@/components/Table/ZoneTable.vue'
 import OutputBarChartHourly from '@/components/BarChart/OutputBarChartHourly.vue'
 import WorkcellStationCard from '@/components/WorkcellStationCard.vue'
+import CTBarChartHourly from '@/components/BarChart/CTBarChartHourly.vue'
 
 // API
 import api from '@/services/api.js'
@@ -71,6 +78,7 @@ const stations = ref([])
 const selectedWorkcellId = ref(null)
 const loading = ref(false)
 const hourlyRaw = ref(null)
+const hourlyCTRaw = ref(null)
 
 // -----------------------------------------
 // FETCH SNAPSHOT (TABLE DATA)
@@ -115,6 +123,16 @@ async function fetchStation() {
 }
 
 // -----------------------------------------
+// FETCH HOURLY CT (CHART DATA)
+// -----------------------------------------
+const fetchHourlyCT = async () => {
+  const res = await api.get('/api/cycle_time_hourly', {
+    params: { date: selectedDate.value },
+  })
+  hourlyCTRaw.value = res.data[0]
+}
+
+// -----------------------------------------
 // CHART TRANSFORMATION
 // -----------------------------------------
 const hourlyOutputChart = computed(() => {
@@ -136,6 +154,38 @@ const hourlyOutputChart = computed(() => {
 })
 
 // -----------------------------------------
+// CHART CT TRANSFORMATION
+// -----------------------------------------
+const ctDeviationLine = computed(() => {
+  if (!hourlyCTRaw.value?.stations?.length) return []
+
+  return hourlyCTRaw.value.stations.map((st) => ({
+    name: `${st.station_name} ΔCT`,
+    type: 'line',
+    yAxisIndex: 1, // second axis
+    smooth: true,
+    data: st.hours.map((h) => {
+      if (h.avg_cycle_time === 0) return 0
+      return Math.round(st.declared_cycletime - h.avg_cycle_time, 1)
+    }),
+  }))
+})
+
+const hourlyCTChart = computed(() => {
+  if (!hourlyCTRaw.value?.stations?.length) return null
+
+  const hours = hourlyCTRaw.value.stations[0].hours.map((h) => h.hour)
+
+  const series = hourlyCTRaw.value.stations.map((st) => ({
+    name: `Station ${st.station_name}`,
+    type: 'bar',
+    data: st.hours.map((h) => h.avg_cycle_time),
+  }))
+
+  return { hours, series: [...series, ...ctDeviationLine.value] }
+})
+
+// -----------------------------------------
 // DERIVED STATE
 // -----------------------------------------
 const selectedWorkcell = computed(() =>
@@ -154,11 +204,13 @@ onMounted(() => {
   fetchSnapshot()
   fetchHourlyOutput()
   fetchStation()
+  fetchHourlyCT()
 })
 
 watch(selectedDate, () => {
   fetchSnapshot()
   fetchHourlyOutput()
   fetchStation()
+  fetchHourlyCT()
 })
 </script>

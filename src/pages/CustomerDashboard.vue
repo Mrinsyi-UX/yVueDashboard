@@ -32,6 +32,11 @@
         <HP_Downtime />
       </NeonCard>
     </div>
+
+    <!-- ================= BOTTOM CAROUSEL ================= -->
+    <NeonCard title="Production Lines">
+      <WorkcellCarousel :workcells="workcells" />
+    </NeonCard>
   </div>
 </template>
 
@@ -47,6 +52,7 @@ import GC_OutputToday from '@/components/GC_OutputToday.vue'
 import GC_OutputYesterday from '@/components/GC_OutputYesterday.vue'
 import HP_Defect from '@/components/HP_Defect.vue'
 import HP_Downtime from '@/components/HP_Downtime.vue'
+import WorkcellCarousel from '@/components/WorkcellCarousel.vue'
 
 // Vue & Services
 import { ref, onMounted, onUnmounted, computed } from 'vue'
@@ -55,8 +61,9 @@ import api from '@/services/api.js'
 // ---------------- TIMER ----------------
 console.log('🔥 DASHBOARD PAGE LOADED')
 
-let timer = null
+const workcells = ref([])
 
+let timer = null
 // ---------------- STATE ----------------
 
 // Output Gauge
@@ -102,6 +109,18 @@ const fetchDefects = async () => {
   }
 }
 
+const fetchWorkcellSummary = async () => {
+  console.log('fetching workcell summary data...')
+
+  try {
+    const res = await api.get('/api/workcell_customer_summary')
+    workcells.value = res.data
+    console.log('📦 Workcell summary data:', workcells.value)
+  } catch (err) {
+    console.error('Failed to fetch workcell summary', err)
+    workcells.value = []
+  }
+}
 // ---------------- CLEAN / NORMALIZE ----------------
 
 const filteredDefects = computed(
@@ -124,10 +143,12 @@ onMounted(() => {
 
   fetchOutputGauge()
   fetchDefects()
+  fetchWorkcellSummary()
 
   timer = setInterval(() => {
     fetchOutputGauge()
     fetchDefects()
+    fetchWorkcellSummary()
   }, 300000) // 5 min
 })
 
