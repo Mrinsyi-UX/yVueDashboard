@@ -11,6 +11,7 @@
           <th class="px-2 py-2 text-center">Status</th>
           <th class="px-2 py-2 text-right">WIP</th>
           <th class="px-2 py-2 text-right">Material In</th>
+          <th class="px-2 py-2 text-right">Plan Output</th>
           <th class="px-2 py-2 text-right">Output</th>
           <th class="px-2 py-2 text-right">Reject</th>
         </tr>
@@ -36,6 +37,7 @@
           <!-- Numeric values -->
           <td class="px-2 py-1 text-right">{{ r.wip }}</td>
           <td class="px-2 py-1 text-right">{{ r.material_in }}</td>
+          <td class="px-2 py-1 text-right">{{ r.prod_output }}</td>
           <td class="px-2 py-1 text-right">{{ r.prod_output }}</td>
           <td class="px-2 py-1 text-right">{{ r.reject_qty }}</td>
         </tr>
