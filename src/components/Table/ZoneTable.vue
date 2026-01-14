@@ -9,7 +9,8 @@
           <th class="px-2 py-2 text-left">Zone</th>
           <th class="px-2 py-2 text-left">Station</th>
           <th class="px-2 py-2 text-center">Status</th>
-          <th class="px-2 py-2 text-right">WIP</th>
+          <th class="px-2 py-2 text-right">WIP_Bal</th>
+          <th class="px-2 py-2 text-right">WIP_Curr</th>
           <th class="px-2 py-2 text-right">Material In</th>
           <th class="px-2 py-2 text-right">Plan Output</th>
           <th class="px-2 py-2 text-right">Output</th>
@@ -35,9 +36,10 @@
           </td>
 
           <!-- Numeric values -->
+          <td class="px-2 py-1 text-right">{{ r.PassWip }}</td>
           <td class="px-2 py-1 text-right">{{ r.wip }}</td>
           <td class="px-2 py-1 text-right">{{ r.material_in }}</td>
-          <td class="px-2 py-1 text-right">{{ r.prod_output }}</td>
+          <td class="px-2 py-1 text-right">{{ r.planned_output }}</td>
           <td class="px-2 py-1 text-right">{{ r.prod_output }}</td>
           <td class="px-2 py-1 text-right">{{ r.reject_qty }}</td>
         </tr>
@@ -78,14 +80,18 @@ const rows = computed(() => {
   // Safety check: if workcell or zones do not exist
   if (!props.workcell?.zones) return []
 
+  const plannedOutput = props.workcell.planned_output ?? 0 // Get planned output from workcell, default to 0 if undefined
+
   // Flatten zones → stations into a single array
   return props.workcell.zones.flatMap((zone: any) =>
     zone.stations.map((st: any) => ({
       zone: zone.zone_name, // Zone number
       name: st.name, // Station name
       is_running: st.is_running, // Boolean status
+      PassWip: st.PassWip, // Passing WIP
       wip: st.wip, // Work in progress
       material_in: st.material_in, // Material input
+      planned_output: plannedOutput, // Planned output from workcell
       prod_output: st.prod_output, // Output quantity
       reject_qty: st.reject_qty, // Reject quantity
     })),
