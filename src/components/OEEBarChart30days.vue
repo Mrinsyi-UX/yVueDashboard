@@ -3,7 +3,7 @@
     <h2 class="text-xl font-semibold text-[#00eaff] mb-2">OEE — Last 30 Days</h2>
 
     <!-- Bar chart -->
-    <div ref="chartRef" class="h-56 w-full"></div>
+    <div ref="chartRef" class="h-76 w-full"></div>
   </OEEOverallCard>
 </template>
 

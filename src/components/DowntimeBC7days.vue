@@ -2,7 +2,7 @@
   <OEEOverallCard>
     <h2 class="text-xl font-semibold text-[#00eaff] mb-2">Downtime — Last 7 Days</h2>
 
-    <div ref="chartRef" class="h-64 w-full"></div>
+    <div ref="chartRef" class="h-76 w-full"></div>
   </OEEOverallCard>
 </template>
 

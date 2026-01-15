@@ -136,6 +136,7 @@ body {
 
 .kanban-card:hover {
   box-shadow: 0 0 18px #00baff55;
+  transform: translateY(-2px);
 }
 
 .neon-card {

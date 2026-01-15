@@ -37,7 +37,7 @@
 
       <!-- RIGHT: DONUT -->
       <div class="flex justify-center items-center">
-        <div ref="chartRef" class="h-56 w-56"></div>
+        <div ref="chartRef" class="h-76 w-76"></div>
       </div>
     </div>
   </OEEOverallCard>
