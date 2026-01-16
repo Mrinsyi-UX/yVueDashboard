@@ -4,7 +4,7 @@
   >
     <!-- IMAGE COLUMN -->
     <div class="w-54 flex items-center justify-center">
-      <img src="../images/oil-refinery.png" class="rounded-lg" />
+      <img :src="getWorkcellImage(wc.workcell_name)" class="rounded-lg max-h-24 object-contain" />
     </div>
 
     <!-- INFO -->
@@ -12,7 +12,7 @@
       <h3 class="text-cyan-300 font-semibold text-lg">
         {{ wc.workcell_name }}
       </h3>
-      <div class="space-y-1">
+      <div class="space-y-">
         <p>Online M/C: {{ wc.active_stations }} / {{ wc.total_stations }}</p>
         <p>
           Downtime Time :
@@ -37,7 +37,20 @@
 <script setup>
 import { formatDuration } from '@/util/time_formater.js'
 
-defineProps({
-  wc: Object,
-})
+defineProps({ wc: Object })
+
+const imageFile = (name) =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+
+const getWorkcellImage = (name) => {
+  try {
+    return new URL(`../images/${imageFile(name)}.png`, import.meta.url).href
+  } catch {
+    return new URL('../images/default.png', import.meta.url).href
+  }
+}
 </script>

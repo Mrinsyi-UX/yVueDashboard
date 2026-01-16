@@ -1,8 +1,8 @@
 <template>
   <OEEOverallCard>
-    <h2 class="text-xl font-semibold text-[#00eaff] mb-2">Downtime — Last 7 Days</h2>
+    <h2 class="text-3xl font-semibold text-[#00eaff] mb-2">Downtime — Last 7 Days</h2>
 
-    <div ref="chartRef" class="h-76 w-full"></div>
+    <div ref="chartRef" class="h-100 w-full"></div>
   </OEEOverallCard>
 </template>
 
@@ -72,7 +72,7 @@ onMounted(() => {
       type: 'value',
       axisLabel: {
         color: '#e5e7eb', // light gray / near-white
-        fontSize: 12,
+        fontSize: 15,
         fontWeight: 500,
       },
       splitLine: {
@@ -84,7 +84,7 @@ onMounted(() => {
       inverse: true,
       axisLabel: {
         color: '#e5e7eb', // light gray / near-white
-        fontSize: 12,
+        fontSize: 15,
         fontWeight: 500,
       },
       axisTick: { show: false },

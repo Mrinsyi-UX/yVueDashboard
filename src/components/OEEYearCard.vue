@@ -2,13 +2,13 @@
   <OEEOverallCard>
     <!-- HEADER -->
     <div class="flex justify-between items-center mb-2">
-      <h2 class="text-xl font-semibold text-[#00eaff]">OEE — {{ selectedYear }}</h2>
+      <h2 class="text-3xl font-semibold text-[#00eaff]">OEE — {{ selectedYear }}</h2>
 
       <!-- YEAR PICKER -->
       <select
         v-model="selectedYear"
         @change="fetchData"
-        class="bg-[#031739] text-white text-sm px-2 py-1 rounded border border-[#00baff44] focus:outline-none"
+        class="bg-[#031739] text-white text-xl px-2 py-1 rounded border border-[#00baff44] focus:outline-none"
       >
         <option v-for="y in yearOptions" :key="y" :value="y">
           {{ y }}
@@ -20,24 +20,24 @@
       <!-- LEFT: KPI COLUMN -->
       <div class="grid grid-rows-3 gap-6">
         <div>
-          <p class="text-xs text-[#7cffc4]">Availability</p>
-          <p class="text-lg font-bold text-[#7cffc4]">{{ availability }}%</p>
+          <p class="text-[10px] md:text-xl text-[#7cffc4]">Availability</p>
+          <p class="text-lg md:text-xl lg:text-2xl font-bold text-[#7cffc4]">{{ availability }}%</p>
         </div>
 
         <div>
-          <p class="text-xs text-[#ffd166]">Performance</p>
-          <p class="text-lg font-bold text-[#ffd166]">{{ performance }}%</p>
+          <p class="text-[10px] md:text-xl text-[#ffd166]">Performance</p>
+          <p class="text-lg md:text-xl lg:text-2xl font-bold text-[#ffd166]">{{ performance }}%</p>
         </div>
 
         <div>
-          <p class="text-xs text-[#9cff57]">Quality</p>
-          <p class="text-lg font-bold text-[#9cff57]">{{ quality }}%</p>
+          <p class="text-[10px] md:text-xl text-[#9cff57]">Quality</p>
+          <p class="text-lg md:text-xl lg:text-2xl font-bold text-[#9cff57]">{{ quality }}%</p>
         </div>
       </div>
 
       <!-- RIGHT: DONUT -->
       <div class="flex justify-center items-center">
-        <div ref="chartRef" class="h-76 w-76"></div>
+        <div ref="chartRef" class="h-100 w-100"></div>
       </div>
     </div>
   </OEEOverallCard>
@@ -55,7 +55,7 @@ let chart = null
 
 // 🔹 STATE
 const selectedYear = ref(new Date().getFullYear())
-const yearOptions = [2023, 2024, 2025]
+const yearOptions = [2023, 2024, 2025, 2026]
 
 const availability = ref(0)
 const performance = ref(0)

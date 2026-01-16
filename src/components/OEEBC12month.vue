@@ -1,9 +1,9 @@
 <template>
   <OEEOverallCard>
-    <h2 class="text-xl font-semibold text-[#00eaff] mb-2">OEE — Last 12 Month</h2>
+    <h2 class="text-3xl font-semibold text-[#00eaff] mb-2">OEE — Last 12 Month</h2>
 
     <!-- Bar chart -->
-    <div ref="chartRef" class="h-76 w-full"></div>
+    <div ref="chartRef" class="h-100 w-full"></div>
   </OEEOverallCard>
 </template>
 
@@ -80,7 +80,7 @@ onMounted(async () => {
       data: months.value,
       axisLine: { lineStyle: { color: '#94A3B8' } },
       axisTick: { show: true },
-      axisLabel: { color: '#E5E7EB', fontSize: 12 },
+      axisLabel: { color: '#E5E7EB', fontSize: 15 },
     },
 
     yAxis: {
@@ -90,7 +90,7 @@ onMounted(async () => {
       splitLine: {
         lineStyle: { color: '#1f3555', type: 'dashed' },
       },
-      axisLabel: { color: '#aaa' },
+      axisLabel: { color: '#aaa', fontSize: 15 },
     },
 
     tooltip: {
